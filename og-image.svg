@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1714"/>
+      <stop offset="100%" style="stop-color:#2d2520"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#d4470a"/>
+      <stop offset="100%" style="stop-color:#f0a500"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff" stop-opacity="0.08"/>
+      <stop offset="100%" style="stop-color:#ffffff" stop-opacity="0.03"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Subtle grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.3" opacity="0.05"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Accent bar top -->
+  <rect x="0" y="0" width="1200" height="5" fill="url(#accentGrad)"/>
+
+  <!-- Left decorative card - Image icon -->
+  <rect x="80" y="140" width="200" height="260" rx="20" fill="url(#cardGrad)" stroke="white" stroke-width="1" stroke-opacity="0.1"/>
+  <text x="180" y="260" font-size="80" text-anchor="middle" dominant-baseline="middle">🖼️</text>
+  <rect x="110" y="310" width="140" height="8" rx="4" fill="white" opacity="0.1"/>
+  <rect x="125" y="328" width="110" height="6" rx="3" fill="white" opacity="0.07"/>
+  <text x="180" y="375" font-size="13" fill="white" opacity="0.4" text-anchor="middle" font-family="Arial, sans-serif">JPG / PNG</text>
+
+  <!-- Arrow in middle -->
+  <rect x="310" y="245" width="80" height="40" rx="20" fill="url(#accentGrad)"/>
+  <text x="350" y="265" font-size="22" text-anchor="middle" dominant-baseline="middle" fill="white">→</text>
+
+  <!-- Right decorative card - PDF icon -->
+  <rect x="420" y="140" width="200" height="260" rx="20" fill="url(#cardGrad)" stroke="white" stroke-width="1" stroke-opacity="0.1"/>
+  <text x="520" y="260" font-size="80" text-anchor="middle" dominant-baseline="middle">📄</text>
+  <rect x="450" y="310" width="140" height="8" rx="4" fill="url(#accentGrad)" opacity="0.6"/>
+  <rect x="465" y="328" width="110" height="6" rx="3" fill="white" opacity="0.07"/>
+  <text x="520" y="375" font-size="13" fill="#f0a500" opacity="0.8" text-anchor="middle" font-family="Arial, sans-serif">PDF</text>
+
+  <!-- Main text content - right side -->
+  <!-- Badge -->
+  <rect x="700" y="140" width="180" height="32" rx="16" fill="url(#accentGrad)"/>
+  <text x="790" y="156" font-size="12" fill="white" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif" font-weight="bold" letter-spacing="2">100% FREE</text>
+
+  <!-- Headline -->
+  <text x="700" y="230" font-size="54" fill="white" font-family="Arial, sans-serif" font-weight="900" letter-spacing="-1">JPG to PDF</text>
+  <text x="700" y="295" font-size="54" fill="url(#accentGrad)" font-family="Arial, sans-serif" font-weight="900" letter-spacing="-1">Converter</text>
+
+  <!-- Subtext -->
+  <text x="700" y="350" font-size="20" fill="white" opacity="0.55" font-family="Arial, sans-serif">Convert images to PDF instantly.</text>
+  <text x="700" y="378" font-size="20" fill="white" opacity="0.55" font-family="Arial, sans-serif">No signup. No watermark. Private.</text>
+
+  <!-- Feature pills -->
+  <rect x="700" y="415" width="120" height="30" rx="15" fill="white" fill-opacity="0.08" stroke="white" stroke-width="1" stroke-opacity="0.15"/>
+  <text x="760" y="430" font-size="12" fill="white" opacity="0.7" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif">⚡ Instant</text>
+
+  <rect x="832" y="415" width="120" height="30" rx="15" fill="white" fill-opacity="0.08" stroke="white" stroke-width="1" stroke-opacity="0.15"/>
+  <text x="892" y="430" font-size="12" fill="white" opacity="0.7" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif">🔒 Private</text>
+
+  <rect x="964" y="415" width="120" height="30" rx="15" fill="white" fill-opacity="0.08" stroke="white" stroke-width="1" stroke-opacity="0.15"/>
+  <text x="1024" y="430" font-size="12" fill="white" opacity="0.7" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif">🆓 Free</text>
+
+  <!-- Domain name -->
+  <text x="700" y="540" font-size="18" fill="white" opacity="0.35" font-family="Arial, sans-serif">gptpayer.online</text>
+
+  <!-- Decorative circles background -->
+  <circle cx="150" cy="550" r="120" fill="white" opacity="0.02"/>
+  <circle cx="1100" cy="80" r="150" fill="#d4470a" opacity="0.05"/>
+</svg>
