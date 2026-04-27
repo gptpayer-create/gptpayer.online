@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PNG to PDF Converter – Free Online Tool | GPTPayer.online</title>
+  <link rel="canonical" href="https://gptpayer.online/png-to-pdf.html" />
+  <meta name="description" content="Convert PNG images to PDF online for free. Upload multiple PNG files and download a merged PDF instantly. No signup required." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="theme-color" content="#d4470a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f0ede8; --surface: #fff; --ink: #1a1714; --muted: #6b6560;
+      --accent: #d4470a; --accent2: #f0a500; --border: #d9d4cd;
+      --radius: 16px; --shadow: 0 4px 32px rgba(0,0,0,0.08);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; line-height: 1.6; }
+    nav { background: var(--ink); padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; gap: 16px; }
+    .logo { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; letter-spacing: -0.5px; white-space: nowrap; flex-shrink: 0; }
+    .logo span { color: var(--accent2); }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav ul a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+    nav ul a:hover { color: #fff; }
+    .tools-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; overflow-x: auto; white-space: nowrap; text-align: center; }
+    .tools-bar a { display: inline-block; margin: 0 6px; padding: 7px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--muted); text-decoration: none; border: 1px solid var(--border); transition: all 0.2s; }
+    .tools-bar a:hover { border-color: var(--accent); color: var(--accent); background: #fff7f4; }
+    .tools-bar a.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .hero { text-align: center; padding: 72px 24px 48px; max-width: 720px; margin: 0 auto; }
+    .badge { display: inline-block; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 14px; border-radius: 100px; margin-bottom: 20px; }
+    h1 { font-family: 'Sora', sans-serif; font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; line-height: 1.1; color: var(--ink); letter-spacing: -1.5px; margin-bottom: 16px; }
+    h1 em { color: var(--accent); font-style: normal; }
+    .hero p { font-size: 1.1rem; color: var(--muted); max-width: 480px; margin: 0 auto 8px; }
+    .converter-wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+    .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .drop-zone { border: 2.5px dashed var(--border); border-radius: 12px; margin: 28px; padding: 56px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: #fff7f4; }
+    .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .drop-icon { font-size: 3rem; margin-bottom: 12px; display: block; }
+    .drop-zone h2 { font-family: 'Sora', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
+    .drop-zone p { color: var(--muted); font-size: 0.9rem; }
+    .btn-browse { display: inline-block; margin-top: 18px; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.9rem; padding: 10px 28px; border-radius: 8px; border: none; cursor: pointer; pointer-events: none; transition: background 0.2s; }
+    .drop-zone:hover .btn-browse { background: #b33d07; }
+    #preview-section { display: none; padding: 0 28px 8px; }
+    #preview-section h3 { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.75rem; margin-bottom: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; max-height: 320px; overflow-y: auto; padding-bottom: 4px; }
+    .thumb-wrap { position: relative; border-radius: 10px; overflow: hidden; aspect-ratio: 1/1; background: var(--bg); border: 1px solid var(--border); }
+    .thumb-wrap img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+    .thumb-remove { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; background: rgba(0,0,0,0.65); color: #fff; border: none; border-radius: 50%; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .thumb-num { position: absolute; bottom: 4px; left: 6px; background: rgba(0,0,0,0.55); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; }
+    .controls { padding: 20px 28px 28px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+    .control-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px; }
+    .control-group label { font-size: 0.78rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .control-group select, .control-group input { border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 12px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; background: var(--bg); color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .control-group select:focus, .control-group input:focus { border-color: var(--accent); }
+    /* Background color option */
+    .control-group input[type=color] { padding: 4px 6px; height: 38px; cursor: pointer; }
+    .btn-convert { background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1rem; padding: 12px 36px; border: none; border-radius: 10px; cursor: pointer; transition: background 0.2s, transform 0.1s; white-space: nowrap; flex-shrink: 0; }
+    .btn-convert:hover { background: #b33d07; }
+    .btn-convert:active { transform: scale(0.98); }
+    .btn-convert:disabled { background: #c2b8b0; cursor: not-allowed; }
+    .btn-clear { background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.875rem; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 20px; cursor: pointer; transition: border-color 0.2s, color 0.2s; white-space: nowrap; }
+    .btn-clear:hover { border-color: var(--ink); color: var(--ink); }
+    #progress-bar-wrap { display: none; padding: 0 28px 20px; }
+    .progress-track { background: var(--bg); border-radius: 100px; height: 8px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 100px; width: 0%; transition: width 0.3s ease; }
+    #progress-label { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+    #success-msg { display: none; padding: 16px 28px 24px; background: #f0fdf4; border-top: 1px solid #bbf7d0; text-align: center; }
+    #success-msg p { font-size: 1rem; color: #166534; font-weight: 500; }
+    .btn-download { margin-top: 12px; display: inline-block; background: #16a34a; color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; padding: 12px 32px; border-radius: 10px; border: none; cursor: pointer; font-size: 0.95rem; transition: background 0.2s; }
+    .btn-download:hover { background: #15803d; }
+    .features { background: var(--ink); padding: 64px 24px; text-align: center; }
+    .features h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; color: #fff; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .features > p { color: rgba(255,255,255,0.55); margin-bottom: 48px; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; max-width: 860px; margin: 0 auto; }
+    .feature-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 28px 20px; text-align: left; }
+    .feature-icon { font-size: 2rem; margin-bottom: 14px; display: block; }
+    .feature-card h3 { font-family: 'Sora', sans-serif; font-weight: 700; color: #fff; font-size: 1rem; margin-bottom: 6px; }
+    .feature-card p { color: rgba(255,255,255,0.5); font-size: 0.875rem; line-height: 1.5; }
+    .how-it-works { padding: 64px 24px; max-width: 860px; margin: 0 auto; }
+    .section-label { font-family: 'Sora', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .how-it-works h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 40px; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; }
+    .step { display: flex; flex-direction: column; gap: 10px; }
+    .step-num { width: 40px; height: 40px; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 800; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .step h3 { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem; }
+    .step p { font-size: 0.875rem; color: var(--muted); }
+    .faq-section { background: var(--surface); padding: 64px 24px; }
+    .faq-inner { max-width: 720px; margin: 0 auto; }
+    .faq-inner h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 36px; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .faq-q { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .faq-q::after { content: '+'; font-size: 1.4rem; color: var(--accent); transition: transform 0.2s; }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.2s; }
+    .faq-item.open .faq-a { max-height: 200px; padding-top: 12px; }
+    footer { background: var(--ink); color: rgba(255,255,255,0.6); padding: 40px 24px; text-align: center; }
+    .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
+    .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+    footer p { font-size: 0.8rem; }
+    .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: var(--ink); color: rgba(255,255,255,0.85); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; z-index: 9999; font-size: 0.875rem; box-shadow: 0 -4px 24px rgba(0,0,0,0.2); }
+    .cookie-banner p { margin: 0; flex: 1; min-width: 200px; }
+    .cookie-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 24px; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.875rem; cursor: pointer; }
+    .cookie-btn-decline { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 10px 18px; font-size: 0.875rem; cursor: pointer; }
+    @media (max-width: 600px) { nav { padding: 0 16px; } nav ul { gap: 12px; } nav ul a { font-size: 0.78rem; } .logo { font-size: 1rem; } .controls { flex-direction: column; } }
+  </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VERDFQS25D"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VERDFQS25D');
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5993734458687156"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+
+<script>
+  function acceptCookies() { localStorage.setItem('cookie_consent','accepted'); document.getElementById('cookieBanner').style.display='none'; }
+  function declineCookies() { localStorage.setItem('cookie_consent','declined'); document.getElementById('cookieBanner').style.display='none'; }
+  function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
+  document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('cookie_consent')) { var b=document.getElementById('cookieBanner'); if(b) b.style.display='none'; }
+  });
+</script>
+
+<nav>
+  <a class="logo" href="/">GPT<span>Payer</span>.online</a>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/blog">Blog</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="tools-bar">
+  <a href="/jpg-to-pdf">JPG → PDF</a>
+  <a href="/pdf-to-jpg">PDF → JPG</a>
+  <a href="/png-to-pdf" class="active">PNG → PDF</a>
+  <a href="/pdf-to-png">PDF → PNG</a>
+  <a href="/word-to-pdf">Word → PDF</a>
+  <a href="/pdf-to-word">PDF → Word</a>
+</div>
+
+<div class="hero">
+  <div class="badge">100% Free · Transparency Preserved · No Signup</div>
+  <h1>Convert <em>PNG Images</em><br>to PDF Instantly</h1>
+  <p>Upload multiple PNG files — including transparent images — and download a merged PDF in seconds, right in your browser.</p>
+</div>
+
+<div class="converter-wrap">
+  <div class="card">
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept="image/png" multiple />
+      <span class="drop-icon">🖼️</span>
+      <h2>Drag & Drop your PNG files here</h2>
+      <p>Or click to browse · Supports transparent PNGs</p>
+      <div class="btn-browse">Choose PNG Files</div>
+    </div>
+
+    <div id="preview-section">
+      <h3>📋 Selected Images (<span id="img-count">0</span>)</h3>
+      <div class="preview-grid" id="previewGrid"></div>
+    </div>
+
+    <div id="progress-bar-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div id="progress-label">Processing images…</div>
+    </div>
+
+    <div id="success-msg">
+      <p>✅ Your PDF is ready!</p>
+      <button class="btn-download" id="btnDownload">⬇ Download PDF</button>
+    </div>
+
+    <div class="controls" id="controlsBar" style="display:none;">
+      <div class="control-group">
+        <label>Page Size</label>
+        <select id="pageSize">
+          <option value="a4">A4 (210×297 mm)</option>
+          <option value="letter">Letter (8.5×11 in)</option>
+          <option value="a3">A3 (297×420 mm)</option>
+          <option value="a5">A5 (148×210 mm)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Orientation</label>
+        <select id="orientation">
+          <option value="portrait">Portrait</option>
+          <option value="landscape">Landscape</option>
+          <option value="auto">Auto (per image)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Margin (px)</label>
+        <select id="margin">
+          <option value="0">No Margin</option>
+          <option value="20" selected>Small (20px)</option>
+          <option value="40">Medium (40px)</option>
+          <option value="80">Large (80px)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>PNG Background</label>
+        <select id="bgMode">
+          <option value="white">White</option>
+          <option value="transparent">Keep Transparent</option>
+          <option value="custom">Custom Color</option>
+        </select>
+      </div>
+      <div class="control-group" id="bgColorGroup" style="display:none;">
+        <label>Background Color</label>
+        <input type="color" id="bgColor" value="#ffffff" />
+      </div>
+      <div class="control-group">
+        <label>Output Filename</label>
+        <input type="text" id="filename" placeholder="converted" />
+      </div>
+      <button class="btn-convert" id="btnConvert" onclick="convertToPDF()">Convert to PDF →</button>
+      <button class="btn-clear" onclick="clearAll()">✕ Clear</button>
+    </div>
+  </div>
+</div>
+
+<div class="features">
+  <h2>PNG-Specific Advantages</h2>
+  <p>PNG to PDF with full transparency support and lossless quality.</p>
+  <div class="features-grid">
+    <div class="feature-card"><span class="feature-icon">🎨</span><h3>Transparency Support</h3><p>Choose a background color for transparent PNGs or keep the PDF layer-ready.</p></div>
+    <div class="feature-card"><span class="feature-icon">🔍</span><h3>Lossless Quality</h3><p>PNG images are lossless — your diagrams, screenshots, and graphics stay crisp.</p></div>
+    <div class="feature-card"><span class="feature-icon">📐</span><h3>Auto Orientation</h3><p>Let the tool detect portrait vs landscape automatically per page for best fit.</p></div>
+    <div class="feature-card"><span class="feature-icon">🔒</span><h3>100% Private</h3><p>Files never leave your browser. All conversion is client-side with jsPDF.</p></div>
+  </div>
+</div>
+
+<div class="how-it-works">
+  <div class="section-label">How It Works</div>
+  <h2>Three Steps to PDF</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Upload PNGs</h3><p>Select one or more PNG files. Transparent backgrounds are fully supported.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Customize</h3><p>Choose page size, orientation, margins, and background color for transparent layers.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Download PDF</h3><p>Click Convert and download your merged PDF instantly — no waiting, no server.</p></div>
+  </div>
+</div>
+
+<div class="faq-section">
+  <div class="faq-inner">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What happens to transparent PNGs?</div><div class="faq-a">You can set a white background, a custom color, or leave it transparent. jsPDF renders the PNG directly onto the PDF page so transparency is handled cleanly.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I upload screenshots and diagrams?</div><div class="faq-a">Absolutely. PNG is the perfect format for screenshots, UI mockups, charts, and diagrams because it preserves sharp edges and text without compression artifacts.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is there a limit on how many PNGs I can convert?</div><div class="faq-a">There is no hard limit in the tool. For very large sets of images, performance depends on your device's browser memory. We recommend batches of up to 50 images for best results.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Does the tool support Auto orientation?</div><div class="faq-a">Yes! The Auto mode detects whether each image is wider than it is tall (landscape) or taller (portrait) and sets the page orientation accordingly — great for mixed batches.</div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">Home</a><a href="/jpg-to-pdf">JPG to PDF</a><a href="/pdf-to-jpg">PDF to JPG</a>
+    <a href="/png-to-pdf">PNG to PDF</a><a href="/pdf-to-png">PDF to PNG</a>
+    <a href="/word-to-pdf">Word to PDF</a><a href="/pdf-to-word">PDF to Word</a>
+    <a href="/privacy">Privacy Policy</a><a href="/terms">Terms</a><a href="/contact">Contact</a>
+  </div>
+  <p>© 2025 GPTPayer.online — All processing happens in your browser. Your files stay private.</p>
+</footer>
+
+<div class="cookie-banner" id="cookieBanner">
+  <p>We use cookies to improve your experience. <a href="/privacy">Learn more</a></p>
+  <div>
+    <button class="cookie-btn" onclick="acceptCookies()">Accept</button>
+    <button class="cookie-btn-decline" onclick="declineCookies()">Decline</button>
+  </div>
+</div>
+
+<script>
+  let files = [], pdfBlob = null;
+  const fileInput = document.getElementById('fileInput');
+  const dropZone = document.getElementById('dropZone');
+
+  document.getElementById('bgMode').addEventListener('change', function() {
+    document.getElementById('bgColorGroup').style.display = this.value === 'custom' ? 'flex' : 'none';
+  });
+
+  fileInput.addEventListener('change', e => addFiles(e.target.files));
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); addFiles(e.dataTransfer.files); });
+
+  function addFiles(newFiles) {
+    for (const f of newFiles) { if (f.type === 'image/png') files.push(f); }
+    renderPreviews();
+    document.getElementById('success-msg').style.display = 'none';
+  }
+
+  function renderPreviews() {
+    const grid = document.getElementById('previewGrid');
+    grid.innerHTML = '';
+    if (files.length === 0) {
+      document.getElementById('preview-section').style.display = 'none';
+      document.getElementById('controlsBar').style.display = 'none';
+      return;
+    }
+    document.getElementById('preview-section').style.display = 'block';
+    document.getElementById('controlsBar').style.display = 'flex';
+    document.getElementById('img-count').textContent = files.length;
+    files.forEach((f, i) => {
+      const wrap = document.createElement('div'); wrap.className = 'thumb-wrap';
+      const img = document.createElement('img'); img.src = URL.createObjectURL(f);
+      const removeBtn = document.createElement('button'); removeBtn.className = 'thumb-remove'; removeBtn.textContent = '×';
+      removeBtn.onclick = () => { files.splice(i, 1); renderPreviews(); };
+      const num = document.createElement('div'); num.className = 'thumb-num'; num.textContent = i + 1;
+      wrap.appendChild(img); wrap.appendChild(removeBtn); wrap.appendChild(num);
+      grid.appendChild(wrap);
+    });
+  }
+
+  function clearAll() {
+    files = []; pdfBlob = null; fileInput.value = '';
+    renderPreviews();
+    document.getElementById('success-msg').style.display = 'none';
+    document.getElementById('progress-bar-wrap').style.display = 'none';
+  }
+
+  async function convertToPDF() {
+    if (files.length === 0) { alert('Please select at least one PNG image.'); return; }
+    const btn = document.getElementById('btnConvert');
+    btn.disabled = true; btn.textContent = 'Converting…';
+    const progressWrap = document.getElementById('progress-bar-wrap');
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progress-label');
+    progressWrap.style.display = 'block';
+    document.getElementById('success-msg').style.display = 'none';
+    progressFill.style.width = '0%';
+
+    const pageSize = document.getElementById('pageSize').value;
+    const orientMode = document.getElementById('orientation').value;
+    const margin = parseInt(document.getElementById('margin').value) || 0;
+    const filename = document.getElementById('filename').value.trim() || 'converted';
+    const bgMode = document.getElementById('bgMode').value;
+    const bgColor = document.getElementById('bgColor').value;
+
+    const { jsPDF } = window.jspdf;
+    let pdf = null;
+
+    for (let i = 0; i < files.length; i++) {
+      progressFill.style.width = Math.round((i / files.length) * 100) + '%';
+      progressLabel.textContent = `Processing image ${i + 1} of ${files.length}…`;
+
+      const imgData = await readFileAsDataURL(files[i], bgMode, bgColor);
+      const img = await loadImage(imgData);
+      const isLandscape = img.width > img.height;
+      const orient = orientMode === 'auto' ? (isLandscape ? 'landscape' : 'portrait') : orientMode;
+
+      if (!pdf) { pdf = new jsPDF({ orientation: orient, unit: 'mm', format: pageSize }); }
+      else { pdf.addPage(pageSize, orient); }
+
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const marginMM = margin * 0.264583;
+      const maxW = pageW - marginMM * 2, maxH = pageH - marginMM * 2;
+      let imgW = maxW, imgH = (img.height * imgW) / img.width;
+      if (imgH > maxH) { imgH = maxH; imgW = (img.width * imgH) / img.height; }
+      pdf.addImage(imgData, 'PNG', marginMM, marginMM, imgW, imgH);
+      await new Promise(r => setTimeout(r, 10));
+    }
+
+    progressFill.style.width = '100%'; progressLabel.textContent = 'Done!';
+    pdfBlob = pdf.output('blob');
+    setTimeout(() => {
+      progressWrap.style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Convert to PDF →';
+    }, 600);
+    document.getElementById('btnDownload').onclick = () => {
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a'); a.href = url; a.download = filename + '.pdf'; a.click();
+      URL.revokeObjectURL(url);
+    };
+  }
+
+  function loadImage(src) {
+    return new Promise((res, rej) => {
+      const img = new Image(); img.onload = () => res(img); img.onerror = rej; img.src = src;
+    });
+  }
+
+  function readFileAsDataURL(file, bgMode, bgColor) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        if (bgMode === 'transparent') { resolve(e.target.result); return; }
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width; canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = bgMode === 'custom' ? bgColor : '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word to PDF Converter – Free Online Tool | GPTPayer.online</title>
+  <link rel="canonical" href="https://gptpayer.online/word-to-pdf.html" />
+  <meta name="description" content="Convert Word documents (.docx) to PDF online for free. Upload your DOCX and download a perfectly formatted PDF instantly. No signup required." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="theme-color" content="#d4470a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <!-- Mammoth.js for DOCX parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <!-- jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- html2canvas for rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #f0ede8; --surface: #fff; --ink: #1a1714; --muted: #6b6560; --accent: #d4470a; --accent2: #f0a500; --border: #d9d4cd; --radius: 16px; --shadow: 0 4px 32px rgba(0,0,0,0.08); }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; line-height: 1.6; }
+    nav { background: var(--ink); padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; gap: 16px; }
+    .logo { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; letter-spacing: -0.5px; white-space: nowrap; flex-shrink: 0; }
+    .logo span { color: var(--accent2); }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav ul a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+    nav ul a:hover { color: #fff; }
+    .tools-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; overflow-x: auto; white-space: nowrap; text-align: center; }
+    .tools-bar a { display: inline-block; margin: 0 6px; padding: 7px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--muted); text-decoration: none; border: 1px solid var(--border); transition: all 0.2s; }
+    .tools-bar a:hover { border-color: var(--accent); color: var(--accent); background: #fff7f4; }
+    .tools-bar a.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .hero { text-align: center; padding: 72px 24px 48px; max-width: 720px; margin: 0 auto; }
+    .badge { display: inline-block; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 14px; border-radius: 100px; margin-bottom: 20px; }
+    h1 { font-family: 'Sora', sans-serif; font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; line-height: 1.1; color: var(--ink); letter-spacing: -1.5px; margin-bottom: 16px; }
+    h1 em { color: var(--accent); font-style: normal; }
+    .hero p { font-size: 1.1rem; color: var(--muted); max-width: 480px; margin: 0 auto 8px; }
+    .converter-wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+    .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .drop-zone { border: 2.5px dashed var(--border); border-radius: 12px; margin: 28px; padding: 56px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: #fff7f4; }
+    .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .drop-icon { font-size: 3rem; margin-bottom: 12px; display: block; }
+    .drop-zone h2 { font-family: 'Sora', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
+    .drop-zone p { color: var(--muted); font-size: 0.9rem; }
+    .btn-browse { display: inline-block; margin-top: 18px; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.9rem; padding: 10px 28px; border-radius: 8px; border: none; cursor: pointer; pointer-events: none; }
+    .drop-zone:hover .btn-browse { background: #b33d07; }
+    /* File info bar */
+    .file-info-bar { display: none; padding: 16px 28px; background: #fff7f4; border-bottom: 1px solid #ffd5c2; align-items: center; gap: 16px; }
+    .file-info-icon { font-size: 2rem; }
+    .file-info-details { flex: 1; }
+    .file-info-name { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--ink); }
+    .file-info-size { font-size: 0.8rem; color: var(--muted); }
+    .btn-remove-file { background: transparent; border: 1.5px solid var(--border); color: var(--muted); border-radius: 8px; padding: 6px 14px; font-size: 0.8rem; cursor: pointer; }
+    /* Options */
+    .options-bar { padding: 16px 28px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+    .control-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px; }
+    .control-group label { font-size: 0.78rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .control-group select, .control-group input[type=text] { border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 12px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; background: var(--bg); color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .control-group select:focus, .control-group input:focus { border-color: var(--accent); }
+    .btn-convert { background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1rem; padding: 12px 36px; border: none; border-radius: 10px; cursor: pointer; transition: background 0.2s, transform 0.1s; white-space: nowrap; flex-shrink: 0; }
+    .btn-convert:hover { background: #b33d07; }
+    .btn-convert:disabled { background: #c2b8b0; cursor: not-allowed; }
+    .btn-clear { background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.875rem; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 20px; cursor: pointer; }
+    .btn-clear:hover { border-color: var(--ink); color: var(--ink); }
+    /* Preview */
+    #docPreview { display: none; padding: 28px; border-bottom: 1px solid var(--border); }
+    #docPreview h3 { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .preview-content { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 32px 40px; max-height: 400px; overflow-y: auto; font-family: 'Times New Roman', serif; font-size: 14px; line-height: 1.7; color: #222; }
+    .preview-content h1, .preview-content h2, .preview-content h3 { font-family: 'Sora', sans-serif; margin: 16px 0 8px; }
+    .preview-content p { margin-bottom: 10px; }
+    .preview-content table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    .preview-content td, .preview-content th { border: 1px solid #ddd; padding: 6px 10px; }
+    .preview-content th { background: #f5f5f5; font-weight: 700; }
+    #progress-bar-wrap { display: none; padding: 0 28px 20px; }
+    .progress-track { background: var(--bg); border-radius: 100px; height: 8px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 100px; width: 0%; transition: width 0.3s ease; }
+    #progress-label { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+    #success-msg { display: none; padding: 20px 28px 28px; background: #f0fdf4; border-top: 1px solid #bbf7d0; text-align: center; }
+    #success-msg p { font-size: 1rem; color: #166534; font-weight: 500; }
+    .btn-download { margin-top: 12px; display: inline-block; background: #16a34a; color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; padding: 12px 32px; border-radius: 10px; border: none; cursor: pointer; font-size: 0.95rem; transition: background 0.2s; }
+    .btn-download:hover { background: #15803d; }
+    /* hidden render area */
+    #renderArea { position: fixed; left: -9999px; top: 0; width: 794px; background: white; padding: 60px; font-family: 'Times New Roman', serif; font-size: 14px; line-height: 1.7; color: #111; }
+    .features { background: var(--ink); padding: 64px 24px; text-align: center; }
+    .features h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; color: #fff; margin-bottom: 8px; }
+    .features > p { color: rgba(255,255,255,0.55); margin-bottom: 48px; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; max-width: 860px; margin: 0 auto; }
+    .feature-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 28px 20px; text-align: left; }
+    .feature-icon { font-size: 2rem; margin-bottom: 14px; display: block; }
+    .feature-card h3 { font-family: 'Sora', sans-serif; font-weight: 700; color: #fff; font-size: 1rem; margin-bottom: 6px; }
+    .feature-card p { color: rgba(255,255,255,0.5); font-size: 0.875rem; line-height: 1.5; }
+    .how-it-works { padding: 64px 24px; max-width: 860px; margin: 0 auto; }
+    .section-label { font-family: 'Sora', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .how-it-works h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 40px; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; }
+    .step { display: flex; flex-direction: column; gap: 10px; }
+    .step-num { width: 40px; height: 40px; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 800; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .step h3 { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem; }
+    .step p { font-size: 0.875rem; color: var(--muted); }
+    .faq-section { background: var(--surface); padding: 64px 24px; }
+    .faq-inner { max-width: 720px; margin: 0 auto; }
+    .faq-inner h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 36px; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .faq-q { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .faq-q::after { content: '+'; font-size: 1.4rem; color: var(--accent); transition: transform 0.2s; }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.2s; }
+    .faq-item.open .faq-a { max-height: 200px; padding-top: 12px; }
+    footer { background: var(--ink); color: rgba(255,255,255,0.6); padding: 40px 24px; text-align: center; }
+    .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
+    .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+    footer p { font-size: 0.8rem; }
+    .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: var(--ink); color: rgba(255,255,255,0.85); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; z-index: 9999; font-size: 0.875rem; box-shadow: 0 -4px 24px rgba(0,0,0,0.2); }
+    .cookie-banner p { margin: 0; flex: 1; min-width: 200px; }
+    .cookie-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 24px; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.875rem; cursor: pointer; }
+    .cookie-btn-decline { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 10px 18px; font-size: 0.875rem; cursor: pointer; }
+    @media (max-width: 600px) { nav { padding: 0 16px; } nav ul { gap: 12px; } nav ul a { font-size: 0.78rem; } .logo { font-size: 1rem; } .options-bar, .controls { flex-direction: column; } }
+  </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VERDFQS25D"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VERDFQS25D');
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5993734458687156"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+<script>
+  function acceptCookies() { localStorage.setItem('cookie_consent','accepted'); document.getElementById('cookieBanner').style.display='none'; }
+  function declineCookies() { localStorage.setItem('cookie_consent','declined'); document.getElementById('cookieBanner').style.display='none'; }
+  function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
+  document.addEventListener('DOMContentLoaded', function() { if (localStorage.getItem('cookie_consent')) { var b=document.getElementById('cookieBanner'); if(b) b.style.display='none'; } });
+</script>
+
+<nav>
+  <a class="logo" href="/">GPT<span>Payer</span>.online</a>
+  <ul><li><a href="/">Home</a></li><li><a href="/blog">Blog</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul>
+</nav>
+
+<div class="tools-bar">
+  <a href="/jpg-to-pdf">JPG → PDF</a>
+  <a href="/pdf-to-jpg">PDF → JPG</a>
+  <a href="/png-to-pdf">PNG → PDF</a>
+  <a href="/pdf-to-png">PDF → PNG</a>
+  <a href="/word-to-pdf" class="active">Word → PDF</a>
+  <a href="/pdf-to-word">PDF → Word</a>
+</div>
+
+<div class="hero">
+  <div class="badge">DOCX · DOC · Formatting Preserved · No Signup</div>
+  <h1>Convert <em>Word to PDF</em><br>Perfectly Formatted</h1>
+  <p>Upload your .docx file and convert it to a professional PDF in seconds. Headings, bold, tables, and lists — all preserved in your browser.</p>
+</div>
+
+<div class="converter-wrap">
+  <div class="card">
+
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept=".docx,.doc" />
+      <span class="drop-icon">📝</span>
+      <h2>Drag & Drop your Word file here</h2>
+      <p>Supports .docx and .doc · Max 50 MB · Formatting preserved</p>
+      <div class="btn-browse">Choose Word File</div>
+    </div>
+
+    <!-- File info -->
+    <div class="file-info-bar" id="fileInfoBar">
+      <span class="file-info-icon">📄</span>
+      <div class="file-info-details">
+        <div class="file-info-name" id="fileName">document.docx</div>
+        <div class="file-info-size" id="fileSize">—</div>
+      </div>
+      <button class="btn-remove-file" onclick="clearAll()">✕ Remove</button>
+    </div>
+
+    <!-- Document Preview -->
+    <div id="docPreview">
+      <h3>📋 Document Preview</h3>
+      <div class="preview-content" id="previewContent"></div>
+    </div>
+
+    <!-- Options -->
+    <div class="options-bar" id="optionsBar" style="display:none;">
+      <div class="control-group">
+        <label>Page Size</label>
+        <select id="pageSize">
+          <option value="a4" selected>A4 (210×297 mm)</option>
+          <option value="letter">Letter (8.5×11 in)</option>
+          <option value="a3">A3 (297×420 mm)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Orientation</label>
+        <select id="orientation">
+          <option value="portrait" selected>Portrait</option>
+          <option value="landscape">Landscape</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Margin</label>
+        <select id="margin">
+          <option value="narrow">Narrow (12mm)</option>
+          <option value="normal" selected>Normal (25mm)</option>
+          <option value="wide">Wide (40mm)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Output Filename</label>
+        <input type="text" id="filename" placeholder="converted-document" />
+      </div>
+      <button class="btn-convert" id="btnConvert" onclick="convertToPDF()">Convert to PDF →</button>
+      <button class="btn-clear" onclick="clearAll()">✕ Clear</button>
+    </div>
+
+    <div id="progress-bar-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div id="progress-label">Processing document…</div>
+    </div>
+
+    <div id="success-msg">
+      <p>✅ Your PDF is ready!</p>
+      <button class="btn-download" id="btnDownload">⬇ Download PDF</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Hidden render area for html2canvas -->
+<div id="renderArea"></div>
+
+<div class="features">
+  <h2>Professional Word to PDF Conversion</h2>
+  <p>Preserve your document's structure and formatting — no Word installation needed.</p>
+  <div class="features-grid">
+    <div class="feature-card"><span class="feature-icon">📐</span><h3>Formatting Preserved</h3><p>Headings, bold, italic, tables, bullet lists, and numbered lists are all retained in the output PDF.</p></div>
+    <div class="feature-card"><span class="feature-icon">🔒</span><h3>100% Private</h3><p>Your document is parsed entirely in the browser using Mammoth.js. Nothing is uploaded to any server.</p></div>
+    <div class="feature-card"><span class="feature-icon">📋</span><h3>Live Preview</h3><p>See a rendered preview of your document's content before converting — so you know what to expect.</p></div>
+    <div class="feature-card"><span class="feature-icon">⚡</span><h3>Instant Output</h3><p>No waiting, no queues. Your PDF is generated instantly using jsPDF and html2canvas in your browser.</p></div>
+  </div>
+</div>
+
+<div class="how-it-works">
+  <div class="section-label">How It Works</div>
+  <h2>Three Simple Steps</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Upload DOCX</h3><p>Drag & drop your .docx file. Mammoth.js parses the document content locally.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Preview & Customize</h3><p>Review the document preview. Set page size, orientation, and margin options.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Download PDF</h3><p>Click Convert and your formatted PDF is ready to download instantly.</p></div>
+  </div>
+</div>
+
+<div class="faq-section">
+  <div class="faq-inner">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Does it support .doc files (older Word format)?</div><div class="faq-a">The tool works best with .docx (the modern format). Older .doc files may have limited support — we recommend converting to .docx first using Word or LibreOffice.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Will my tables and images be included?</div><div class="faq-a">Tables are fully supported and rendered in the PDF. Embedded images in the docx will be included if the browser can decode them. Complex image layouts may have minor formatting differences.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is my document sent to a server?</div><div class="faq-a">No. Your .docx file is processed entirely in your browser using the open-source Mammoth.js library. It never leaves your device.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is the maximum file size?</div><div class="faq-a">The tool handles files up to 50 MB comfortably. Very large files with many embedded images may take a few seconds longer to process.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Will fonts look the same as in Word?</div><div class="faq-a">The PDF uses web-safe fonts as fallbacks (Times New Roman, Arial). Custom fonts embedded in the .docx may render as their closest equivalent. For pixel-perfect results, Microsoft Word's export function is recommended.</div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">Home</a><a href="/jpg-to-pdf">JPG to PDF</a><a href="/pdf-to-jpg">PDF to JPG</a>
+    <a href="/png-to-pdf">PNG to PDF</a><a href="/pdf-to-png">PDF to PNG</a>
+    <a href="/word-to-pdf">Word to PDF</a><a href="/pdf-to-word">PDF to Word</a>
+    <a href="/privacy">Privacy Policy</a><a href="/terms">Terms</a><a href="/contact">Contact</a>
+  </div>
+  <p>© 2025 GPTPayer.online — All processing happens in your browser. Your files stay private.</p>
+</footer>
+
+<div class="cookie-banner" id="cookieBanner">
+  <p>We use cookies to improve your experience. <a href="/privacy">Learn more</a></p>
+  <div>
+    <button class="cookie-btn" onclick="acceptCookies()">Accept</button>
+    <button class="cookie-btn-decline" onclick="declineCookies()">Decline</button>
+  </div>
+</div>
+
+<script>
+  let docFile = null, htmlContent = '', pdfBlob = null;
+  const fileInput = document.getElementById('fileInput');
+  const dropZone = document.getElementById('dropZone');
+
+  fileInput.addEventListener('change', e => { if (e.target.files[0]) loadDoc(e.target.files[0]); });
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f && (f.name.endsWith('.docx') || f.name.endsWith('.doc'))) loadDoc(f);
+    else alert('Please upload a .docx or .doc file.');
+  });
+
+  async function loadDoc(file) {
+    docFile = file;
+    dropZone.style.display = 'none';
+    document.getElementById('fileInfoBar').style.display = 'flex';
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+    document.getElementById('success-msg').style.display = 'none';
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.convertToHtml({ arrayBuffer });
+      htmlContent = result.value;
+      document.getElementById('previewContent').innerHTML = htmlContent;
+      document.getElementById('docPreview').style.display = 'block';
+      document.getElementById('optionsBar').style.display = 'flex';
+    } catch (err) {
+      alert('Error reading document: ' + err.message);
+      clearAll();
+    }
+  }
+
+  function clearAll() {
+    docFile = null; htmlContent = ''; pdfBlob = null; fileInput.value = '';
+    dropZone.style.display = 'block';
+    document.getElementById('fileInfoBar').style.display = 'none';
+    document.getElementById('docPreview').style.display = 'none';
+    document.getElementById('optionsBar').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'none';
+    document.getElementById('progress-bar-wrap').style.display = 'none';
+  }
+
+  async function convertToPDF() {
+    if (!htmlContent) { alert('Please upload a Word document first.'); return; }
+    const btn = document.getElementById('btnConvert');
+    btn.disabled = true; btn.textContent = 'Converting…';
+    const progressWrap = document.getElementById('progress-bar-wrap');
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progress-label');
+    progressWrap.style.display = 'block';
+    progressFill.style.width = '10%';
+    progressLabel.textContent = 'Rendering document…';
+    document.getElementById('success-msg').style.display = 'none';
+
+    const pageSize = document.getElementById('pageSize').value;
+    const orientation = document.getElementById('orientation').value;
+    const marginMap = { narrow: 12, normal: 25, wide: 40 };
+    const marginMM = marginMap[document.getElementById('margin').value];
+    const filename = document.getElementById('filename').value.trim() || 'converted-document';
+
+    try {
+      // Set render area content
+      const renderArea = document.getElementById('renderArea');
+      const pagePx = pageSize === 'a4' ? { w: 794, h: 1123 } : pageSize === 'letter' ? { w: 816, h: 1056 } : { w: 1123, h: 1587 };
+      const renderW = orientation === 'landscape' ? pagePx.h : pagePx.w;
+      renderArea.style.width = renderW + 'px';
+      renderArea.style.padding = (marginMM * 3.78) + 'px';
+      renderArea.innerHTML = `<style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Times New Roman', Georgia, serif; font-size: 14px; line-height: 1.7; color: #111; }
+        h1 { font-size: 28px; font-weight: bold; margin: 20px 0 10px; }
+        h2 { font-size: 22px; font-weight: bold; margin: 18px 0 8px; }
+        h3 { font-size: 18px; font-weight: bold; margin: 14px 0 6px; }
+        p { margin-bottom: 10px; }
+        strong, b { font-weight: bold; }
+        em, i { font-style: italic; }
+        ul, ol { padding-left: 24px; margin-bottom: 12px; }
+        li { margin-bottom: 4px; }
+        table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+        td, th { border: 1px solid #999; padding: 6px 10px; font-size: 13px; }
+        th { background: #f0f0f0; font-weight: bold; }
+        img { max-width: 100%; height: auto; }
+      </style>${htmlContent}`;
+
+      progressFill.style.width = '40%';
+      progressLabel.textContent = 'Capturing pages…';
+      await new Promise(r => setTimeout(r, 100));
+
+      const canvas = await html2canvas(renderArea, { scale: 2, useCORS: true, allowTaint: true, logging: false });
+      progressFill.style.width = '80%';
+      progressLabel.textContent = 'Generating PDF…';
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      const { jsPDF } = window.jspdf;
+
+      const fmt = pageSize === 'a4' ? [210, 297] : pageSize === 'letter' ? [215.9, 279.4] : [297, 420];
+      const pdfW = orientation === 'landscape' ? fmt[1] : fmt[0];
+      const pdfH = orientation === 'landscape' ? fmt[0] : fmt[1];
+
+      const pdf = new jsPDF({ orientation, unit: 'mm', format: pageSize });
+      const contentW = pdfW - marginMM * 2;
+      const imgPxW = canvas.width; const imgPxH = canvas.height;
+      const mmPerPx = contentW / imgPxW;
+      const totalHeightMM = imgPxH * mmPerPx;
+      const contentH = pdfH - marginMM * 2;
+      let yPos = 0, pageNum = 0;
+
+      while (yPos < totalHeightMM) {
+        if (pageNum > 0) pdf.addPage(pageSize, orientation);
+        const sliceH = Math.min(contentH, totalHeightMM - yPos);
+        const srcY = yPos / mmPerPx;
+        const srcH = sliceH / mmPerPx;
+        const sliceCanvas = document.createElement('canvas');
+        sliceCanvas.width = imgPxW; sliceCanvas.height = srcH;
+        const ctx = sliceCanvas.getContext('2d');
+        ctx.drawImage(canvas, 0, srcY, imgPxW, srcH, 0, 0, imgPxW, srcH);
+        const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.92);
+        pdf.addImage(sliceData, 'JPEG', marginMM, marginMM, contentW, sliceH);
+        yPos += contentH; pageNum++;
+      }
+
+      progressFill.style.width = '100%'; progressLabel.textContent = 'Done!';
+      pdfBlob = pdf.output('blob');
+
+      setTimeout(() => {
+        progressWrap.style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Convert to PDF →';
+        renderArea.innerHTML = '';
+      }, 500);
+
+      document.getElementById('btnDownload').onclick = () => {
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a'); a.href = url; a.download = filename + '.pdf'; a.click();
+        URL.revokeObjectURL(url);
+      };
+
+    } catch(err) {
+      console.error(err);
+      alert('Conversion error: ' + err.message);
+      btn.disabled = false; btn.textContent = 'Convert to PDF →';
+      progressWrap.style.display = 'none';
+    }
+  }
+</script>
+</body>
+</html>

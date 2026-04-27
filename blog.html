@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — PDF Tips, Guides & How-Tos | GPTPayer.online</title>
+  <meta name="description" content="Helpful guides, tips and how-to articles about PDF and document management. JPG to PDF, file size tips, printing, security and more." />
+  <link rel="canonical" href="https://gptpayer.online/blog.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="theme-color" content="#d4470a" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VERDFQS25D"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VERDFQS25D');
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5993734458687156"
+     crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{--accent:#d4470a;--accent2:#f0a500;--ink:#1a1714;--bg:#f0ede8;--surface:#fff;--muted:#6b6560;--border:#d9d4cd;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;}
+  nav{background:var(--ink);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;gap:16px;}
+  .logo{font-family:'Sora',sans-serif;font-weight:800;font-size:1.25rem;color:#fff;text-decoration:none;letter-spacing:-0.5px;white-space:nowrap;}
+  .logo span{color:var(--accent2);}
+  nav ul{list-style:none;display:flex;gap:24px;}
+  nav ul a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.875rem;font-weight:500;transition:color 0.2s;}
+  nav ul a:hover{color:#fff;}
+  nav ul a.active{color:#fff;}
+
+  .blog-hero{text-align:center;padding:60px 24px 48px;max-width:720px;margin:0 auto;}
+  .blog-hero .badge{display:inline-block;background:var(--accent);color:#fff;font-family:'Sora',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 14px;border-radius:100px;margin-bottom:16px;}
+  .blog-hero h1{font-family:'Sora',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:800;line-height:1.1;letter-spacing:-1.5px;margin-bottom:12px;}
+  .blog-hero p{color:var(--muted);font-size:1rem;max-width:480px;margin:0 auto;}
+
+  .filter-bar{text-align:center;padding:0 20px 32px;}
+  .filter-bar button{margin:4px;padding:7px 18px;border-radius:20px;font-size:0.8rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .filter-bar button:hover,.filter-bar button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+  .posts-grid{max-width:1060px;margin:0 auto;padding:0 20px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
+  .post-card{background:var(--surface);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.06);overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;color:inherit;display:flex;flex-direction:column;}
+  .post-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.12);text-decoration:none;}
+  .post-card-top{background:var(--ink);padding:28px 24px 20px;position:relative;}
+  .post-card-top .cat{font-family:'Sora',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin-bottom:8px;}
+  .post-card-top h2{font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;line-height:1.35;}
+  .post-card-body{padding:20px 24px;flex:1;display:flex;flex-direction:column;}
+  .post-card-body p{color:var(--muted);font-size:0.875rem;line-height:1.6;flex:1;}
+  .post-meta{margin-top:16px;display:flex;align-items:center;justify-content:space-between;}
+  .post-date{font-size:0.75rem;color:var(--muted);}
+  .read-more{font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:700;color:var(--accent);}
+
+  .tools-strip{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px;text-align:center;margin-bottom:0;}
+  .tools-strip p{font-size:0.85rem;color:var(--muted);margin-bottom:12px;}
+  .tools-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;}
+  .tools-chips a{padding:8px 18px;border-radius:20px;background:var(--ink);color:rgba(255,255,255,0.85);font-size:0.8rem;font-weight:600;text-decoration:none;transition:background 0.2s;}
+  .tools-chips a:hover{background:var(--accent);}
+
+  footer{background:var(--ink);color:rgba(255,255,255,0.6);padding:2.5rem 1.5rem;font-size:0.85rem;}
+  .footer-inner{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:28px;max-width:860px;margin:0 auto 28px;text-align:left;}
+  .footer-col-title{font-family:'Sora',sans-serif;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:10px;}
+  .footer-col a{display:block;color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.875rem;margin-bottom:6px;}
+  .footer-col a:hover{color:#fff;}
+  .footer-bottom{text-align:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;}
+
+  @media(max-width:600px){nav ul{gap:12px;} nav ul li:nth-child(n+4){display:none;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/">GPT<span>Payer</span>.online</a>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/blog.html" class="active">Blog</a></li>
+    <li><a href="/jpg-to-pdf.html">Tools</a></li>
+    <li><a href="/about.html">About</a></li>
+  </ul>
+</nav>
+
+<div class="blog-hero">
+  <span class="badge">Blog</span>
+  <h1>PDF Tips &amp; Guides</h1>
+  <p>Documents, conversions, printing, security — everything explained in simple language.</p>
+</div>
+
+<div class="filter-bar">
+  <button class="active" onclick="filterPosts('all', this)">All</button>
+  <button onclick="filterPosts('Guide', this)">Guide</button>
+  <button onclick="filterPosts('How-To', this)">How-To</button>
+  <button onclick="filterPosts('Tips & Tricks', this)">Tips & Tricks</button>
+  <button onclick="filterPosts('Security', this)">Security</button>
+  <button onclick="filterPosts('Freelancing', this)">Freelancing</button>
+  <button onclick="filterPosts('Deep Dive', this)">Deep Dive</button>
+</div>
+
+<div class="posts-grid" id="postsGrid">
+
+  <a class="post-card" href="/blog-jpg-to-pdf-guide.html" data-cat="Guide">
+    <div class="post-card-top">
+      <div class="cat">Guide</div>
+      <h2>JPG to PDF: The Complete Guide — Best Practices & Settings</h2>
+    </div>
+    <div class="post-card-body">
+      <p>Page size, orientation, margins — everything about JPG to PDF conversion explained in this comprehensive guide.</p>
+      <div class="post-meta">
+        <span class="post-date">April 20, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="post-card" href="/blog-reduce-pdf-file-size.html" data-cat="Tips & Tricks">
+    <div class="post-card-top">
+      <div class="cat">Tips &amp; Tricks</div>
+      <h2>How to Reduce PDF File Size — 7 Practical Tips</h2>
+    </div>
+    <div class="post-card-body">
+      <p>Large PDFs not sending via email? Reduce your PDF size instantly with these 7 tips — without losing quality.</p>
+      <div class="post-meta">
+        <span class="post-date">April 18, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="post-card" href="/blog-pdf-password-security.html" data-cat="Security">
+    <div class="post-card-top">
+      <div class="cat">Security</div>
+      <h2>PDF Security: How Does Password Protection Really Work?</h2>
+    </div>
+    <div class="post-card-body">
+      <p>Learn how to protect your PDF files with a password. Types of PDF encryption, use cases and best practices.</p>
+      <div class="post-meta">
+        <span class="post-date">April 15, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="post-card" href="/blog-pdf-vs-word.html" data-cat="Guide">
+    <div class="post-card-top">
+      <div class="cat">Guide</div>
+      <h2>PDF vs Word (DOCX): When to Use Which Format?</h2>
+    </div>
+    <div class="post-card-body">
+      <p>Should you send a resume as PDF or Word? This guide clears it all up in one go — with the golden rule.</p>
+      <div class="post-meta">
+        <span class="post-date">April 12, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="post-card" href="/blog-scan-documents-mobile.html" data-cat="How-To">
+    <div class="post-card-top">
+      <div class="cat">How-To</div>
+      <h2>How to Scan Documents with Your Phone — The Right Way (2026)</h2>
+    </div>
+    <div class="post-card-body">
+      <p>How to scan professional quality documents with your phone? Best apps, 7 tips and tricks — all here.</p>
+      <div class="post-meta">
+        <span class="post-date">April 10, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="post-card" href="/blog-pdf-printing-tips.html" data-cat="Tips & Tricks">
+    <div class="post-card-top">
+      <div class="cat">Tips &amp; Tricks</div>
+      <h2>PDF Printing Mistakes to Avoid — and How to Fix Them</h2>
+    </div>
+    <div class="post-card-body">
+      <p>Scale, margins, duplex printing — common PDF printing mistakes and their simple solutions.</p>
+      <div class="post-meta">
+        <span class="post-date">April 8, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="post-card" href="/blog-images-pdf-email.html" data-cat="How-To">
+    <div class="post-card-top">
+      <div class="cat">How-To</div>
+      <h2>How to Combine Images into a PDF and Email Them Professionally</h2>
+    </div>
+    <div class="post-card-body">
+      <p>How to combine multiple photos into one PDF and send a professional email. Complete beginner guide.</p>
+      <div class="post-meta">
+        <span class="post-date">April 5, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="post-card" href="/blog-pdf-formats-explained.html" data-cat="Deep Dive">
+    <div class="post-card-top">
+      <div class="cat">Deep Dive</div>
+      <h2>PDF/A, PDF/X, PDF/E — The Different PDF Standards Explained</h2>
+    </div>
+    <div class="post-card-body">
+      <p>The different PDF versions and standards — explained in simple language, from government submissions to printing.</p>
+      <div class="post-meta">
+        <span class="post-date">April 3, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="post-card" href="/blog-png-vs-jpg.html" data-cat="Guide">
+    <div class="post-card-top">
+      <div class="cat">Guide</div>
+      <h2>PNG vs JPG: Which Image Format Is Best for Your Documents?</h2>
+    </div>
+    <div class="post-card-body">
+      <p>Screenshots, photos, documents — find out which image format is best for each use case in this simple guide.</p>
+      <div class="post-meta">
+        <span class="post-date">April 1, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="post-card" href="/blog-pdf-tools-freelancers.html" data-cat="Freelancing">
+    <div class="post-card-top">
+      <div class="cat">Freelancing</div>
+      <h2>5 PDF Tips Every Freelancer Should Know</h2>
+    </div>
+    <div class="post-card-body">
+      <p>Invoices, portfolios, agreements — PDF tools save both your time and your professional image. Must-read.</p>
+      <div class="post-meta">
+        <span class="post-date">March 28, 2026</span>
+        <span class="read-more">Read →</span>
+      </div>
+    </div>
+  </a>
+
+</div>
+
+<div class="tools-strip">
+  <p>Try our free PDF tools:</p>
+  <div class="tools-chips">
+    <a href="/jpg-to-pdf.html">JPG to PDF</a>
+    <a href="/pdf-to-jpg.html">PDF to JPG</a>
+    <a href="/png-to-pdf.html">PNG to PDF</a>
+    <a href="/pdf-to-png.html">PDF to PNG</a>
+    <a href="/word-to-pdf.html">Word to PDF</a>
+    <a href="/pdf-to-word.html">PDF to Word</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-col-title">PDF Tools</div>
+      <a href="/jpg-to-pdf.html">JPG to PDF</a>
+      <a href="/pdf-to-jpg.html">PDF to JPG</a>
+      <a href="/png-to-pdf.html">PNG to PDF</a>
+      <a href="/pdf-to-png.html">PDF to PNG</a>
+      <a href="/word-to-pdf.html">Word to PDF</a>
+      <a href="/pdf-to-word.html">PDF to Word</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Learn</div>
+      <a href="/blog.html">Blog</a>
+      <a href="/about.html">About Us</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal</div>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p style="font-size:0.8rem;">© 2026 GPTPayer.online — All rights reserved.</p>
+    <p style="font-size:0.72rem;opacity:0.45;margin-top:4px;">All file processing happens in your browser. Your files stay private.</p>
+  </div>
+</footer>
+
+<script>
+function filterPosts(cat, btn) {
+  document.querySelectorAll('.filter-bar button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.post-card').forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>
