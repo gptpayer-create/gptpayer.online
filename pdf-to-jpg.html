@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF to JPG Converter – Free Online Tool | GPTPayer.online</title>
+  <link rel="canonical" href="https://gptpayer.online/pdf-to-jpg.html" />
+  <meta name="description" content="Convert PDF pages to high-quality JPG images. Free, private, browser-based. Choose DPI, quality and download as ZIP." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="theme-color" content="#d4470a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <!-- JSZip for bulk download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f0ede8; --surface: #fff; --ink: #1a1714; --muted: #6b6560;
+      --accent: #d4470a; --accent2: #f0a500; --border: #d9d4cd;
+      --radius: 16px; --shadow: 0 4px 32px rgba(0,0,0,0.08);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; line-height: 1.6; }
+
+    /* NAV */
+    nav { background: var(--ink); padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; gap: 16px; }
+    .logo { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; letter-spacing: -0.5px; white-space: nowrap; flex-shrink: 0; }
+    .logo span { color: var(--accent2); }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav ul a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+    nav ul a:hover { color: #fff; }
+    .nav-tools { display: flex; gap: 8px; }
+    .nav-tool-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-size: 0.75rem; padding: 5px 12px; border-radius: 20px; cursor: pointer; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+    .nav-tool-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .nav-tool-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 72px 24px 48px; max-width: 720px; margin: 0 auto; }
+    .badge { display: inline-block; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 14px; border-radius: 100px; margin-bottom: 20px; }
+    h1 { font-family: 'Sora', sans-serif; font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; line-height: 1.1; color: var(--ink); letter-spacing: -1.5px; margin-bottom: 16px; }
+    h1 em { color: var(--accent); font-style: normal; }
+    .hero p { font-size: 1.1rem; color: var(--muted); max-width: 480px; margin: 0 auto 8px; }
+
+    /* TOOLS NAV BAR */
+    .tools-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; overflow-x: auto; white-space: nowrap; text-align: center; }
+    .tools-bar a { display: inline-block; margin: 0 6px; padding: 7px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--muted); text-decoration: none; border: 1px solid var(--border); transition: all 0.2s; }
+    .tools-bar a:hover { border-color: var(--accent); color: var(--accent); background: #fff7f4; }
+    .tools-bar a.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* CONVERTER */
+    .converter-wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+    .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .drop-zone { border: 2.5px dashed var(--border); border-radius: 12px; margin: 28px; padding: 56px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: #fff7f4; }
+    .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .drop-icon { font-size: 3rem; margin-bottom: 12px; display: block; }
+    .drop-zone h2 { font-family: 'Sora', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
+    .drop-zone p { color: var(--muted); font-size: 0.9rem; }
+    .btn-browse { display: inline-block; margin-top: 18px; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.9rem; padding: 10px 28px; border-radius: 8px; border: none; cursor: pointer; pointer-events: none; transition: background 0.2s; }
+    .drop-zone:hover .btn-browse { background: #b33d07; }
+
+    /* OPTIONS */
+    .options-bar { padding: 16px 28px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+    .control-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px; }
+    .control-group label { font-size: 0.78rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .control-group select, .control-group input[type=range], .control-group input[type=number] { border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 12px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; background: var(--bg); color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .control-group select:focus, .control-group input:focus { border-color: var(--accent); }
+    .quality-row { display: flex; align-items: center; gap: 10px; }
+    .quality-row input[type=range] { flex: 1; padding: 0; border: none; background: transparent; }
+    .quality-label { font-weight: 700; color: var(--accent); font-size: 0.9rem; min-width: 32px; }
+
+    /* BUTTONS */
+    .btn-convert { background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1rem; padding: 12px 36px; border: none; border-radius: 10px; cursor: pointer; transition: background 0.2s, transform 0.1s; white-space: nowrap; flex-shrink: 0; }
+    .btn-convert:hover { background: #b33d07; }
+    .btn-convert:active { transform: scale(0.98); }
+    .btn-convert:disabled { background: #c2b8b0; cursor: not-allowed; }
+    .btn-clear { background: transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.875rem; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 20px; cursor: pointer; transition: border-color 0.2s, color 0.2s; white-space: nowrap; }
+    .btn-clear:hover { border-color: var(--ink); color: var(--ink); }
+
+    /* PROGRESS */
+    #progress-bar-wrap { display: none; padding: 0 28px 20px; }
+    .progress-track { background: var(--bg); border-radius: 100px; height: 8px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 100px; width: 0%; transition: width 0.3s ease; }
+    #progress-label { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+
+    /* RESULTS */
+    #results-section { display: none; padding: 24px 28px; }
+    .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .results-header h3 { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1rem; color: var(--ink); }
+    .btn-download-all { background: #16a34a; color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; padding: 10px 24px; border-radius: 10px; border: none; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+    .btn-download-all:hover { background: #15803d; }
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+    .result-card { background: var(--bg); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; text-align: center; }
+    .result-card img { width: 100%; aspect-ratio: 3/4; object-fit: contain; background: #fff; display: block; }
+    .result-card-footer { padding: 10px 12px; }
+    .result-card-footer p { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; }
+    .btn-dl-single { display: block; width: 100%; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.78rem; padding: 8px; border: none; border-radius: 7px; cursor: pointer; transition: background 0.2s; }
+    .btn-dl-single:hover { background: #b33d07; }
+
+    /* CONTROLS ACTION BAR */
+    .action-bar { padding: 16px 28px 24px; border-top: 1px solid var(--border); display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* FEATURES */
+    .features { background: var(--ink); padding: 64px 24px; text-align: center; }
+    .features h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; color: #fff; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .features > p { color: rgba(255,255,255,0.55); margin-bottom: 48px; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; max-width: 860px; margin: 0 auto; }
+    .feature-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 28px 20px; text-align: left; }
+    .feature-icon { font-size: 2rem; margin-bottom: 14px; display: block; }
+    .feature-card h3 { font-family: 'Sora', sans-serif; font-weight: 700; color: #fff; font-size: 1rem; margin-bottom: 6px; }
+    .feature-card p { color: rgba(255,255,255,0.5); font-size: 0.875rem; line-height: 1.5; }
+
+    /* HOW IT WORKS */
+    .how-it-works { padding: 64px 24px; max-width: 860px; margin: 0 auto; }
+    .section-label { font-family: 'Sora', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .how-it-works h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 40px; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; }
+    .step { display: flex; flex-direction: column; gap: 10px; }
+    .step-num { width: 40px; height: 40px; background: var(--accent); color: #fff; font-family: 'Sora', sans-serif; font-weight: 800; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .step h3 { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem; }
+    .step p { font-size: 0.875rem; color: var(--muted); }
+
+    /* FAQ */
+    .faq-section { background: var(--surface); padding: 64px 24px; }
+    .faq-inner { max-width: 720px; margin: 0 auto; }
+    .faq-inner h2 { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 2rem; letter-spacing: -0.5px; margin-bottom: 36px; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .faq-q { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .faq-q::after { content: '+'; font-size: 1.4rem; color: var(--accent); transition: transform 0.2s; }
+    .faq-item.open .faq-q::after { transform: rotate(45deg); }
+    .faq-a { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.2s; }
+    .faq-item.open .faq-a { max-height: 200px; padding-top: 12px; }
+
+    /* FOOTER */
+    footer { background: var(--ink); color: rgba(255,255,255,0.6); padding: 40px 24px; text-align: center; }
+    .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
+    .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+    footer p { font-size: 0.8rem; }
+
+    /* COOKIE */
+    .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: var(--ink); color: rgba(255,255,255,0.85); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; z-index: 9999; font-size: 0.875rem; box-shadow: 0 -4px 24px rgba(0,0,0,0.2); }
+    .cookie-banner p { margin: 0; flex: 1; min-width: 200px; }
+    .cookie-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 24px; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.875rem; cursor: pointer; }
+    .cookie-btn-decline { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 10px 18px; font-size: 0.875rem; cursor: pointer; }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      nav ul { gap: 12px; }
+      nav ul a { font-size: 0.78rem; }
+      .logo { font-size: 1rem; }
+      .options-bar { flex-direction: column; }
+    }
+  </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VERDFQS25D"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VERDFQS25D');
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4584285687998770"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+
+<script>
+  function acceptCookies() { localStorage.setItem('cookie_consent','accepted'); document.getElementById('cookieBanner').style.display='none'; }
+  function declineCookies() { localStorage.setItem('cookie_consent','declined'); document.getElementById('cookieBanner').style.display='none'; }
+  function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
+  document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('cookie_consent')) { var b=document.getElementById('cookieBanner'); if(b) b.style.display='none'; }
+  });
+</script>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="/">GPT<span>Payer</span>.online</a>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/blog.html">Blog</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- TOOLS BAR -->
+<div class="tools-bar">
+  <a href="/jpg-to-pdf">JPG → PDF</a>
+  <a href="/pdf-to-jpg" class="active">PDF → JPG</a>
+  <a href="/png-to-pdf">PNG → PDF</a>
+  <a href="/pdf-to-png">PDF → PNG</a>
+  <a href="/word-to-pdf">Word → PDF</a>
+  <a href="/pdf-to-word">PDF → Word</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">100% Free · No Signup · Browser-based</div>
+  <h1>Convert <em>PDF to JPG</em><br>in Seconds</h1>
+  <p>Extract every page of your PDF as a high-quality JPG image. Batch download all pages as a ZIP — no uploads to any server.</p>
+</div>
+
+<!-- CONVERTER CARD -->
+<div class="converter-wrap">
+  <div class="card">
+
+    <!-- Drop Zone -->
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept="application/pdf" />
+      <span class="drop-icon">📄</span>
+      <h2>Drag & Drop your PDF here</h2>
+      <p>Or click to browse from your device · Max 200 MB</p>
+      <div class="btn-browse">Choose PDF File</div>
+    </div>
+
+    <!-- Options -->
+    <div class="options-bar" id="optionsBar" style="display:none;">
+      <div class="control-group">
+        <label>Image Quality</label>
+        <div class="quality-row">
+          <input type="range" id="quality" min="60" max="100" value="92" oninput="document.getElementById('qualVal').textContent=this.value+'%'" />
+          <span class="quality-label" id="qualVal">92%</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>Resolution (DPI)</label>
+        <select id="dpiSelect">
+          <option value="1">72 dpi (Screen)</option>
+          <option value="2" selected>150 dpi (Standard)</option>
+          <option value="3">300 dpi (Print Quality)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Page Range</label>
+        <select id="pageRange">
+          <option value="all">All Pages</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+      <div class="control-group" id="customRangeGroup" style="display:none;">
+        <label>Pages (e.g. 1-3, 5)</label>
+        <input type="text" id="customPages" placeholder="1-3, 5, 7" />
+      </div>
+      <div class="control-group">
+        <label>Filename Prefix</label>
+        <input type="text" id="filename" placeholder="page" />
+      </div>
+      <button class="btn-convert" id="btnConvert" onclick="convertPDF()">Convert to JPG →</button>
+      <button class="btn-clear" onclick="clearAll()">✕ Clear</button>
+    </div>
+
+    <!-- Progress -->
+    <div id="progress-bar-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div id="progress-label">Processing pages…</div>
+    </div>
+
+    <!-- Results -->
+    <div id="results-section">
+      <div class="results-header">
+        <h3 id="resultsTitle">📷 Converted Pages</h3>
+        <button class="btn-download-all" id="btnDownloadAll">⬇ Download All as ZIP</button>
+      </div>
+      <div class="results-grid" id="resultsGrid"></div>
+      <div class="action-bar">
+        <button class="btn-clear" onclick="clearAll()">✕ Start Over</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+  <h2>Why Use Our PDF to JPG Tool?</h2>
+  <p>Professional-grade conversion, completely private and free.</p>
+  <div class="features-grid">
+    <div class="feature-card"><span class="feature-icon">🔒</span><h3>100% Private</h3><p>All processing happens in your browser. Your PDF never leaves your device.</p></div>
+    <div class="feature-card"><span class="feature-icon">🖼️</span><h3>High Resolution</h3><p>Choose up to 300 DPI for print-quality JPG output from every PDF page.</p></div>
+    <div class="feature-card"><span class="feature-icon">📦</span><h3>Bulk ZIP Download</h3><p>Download all converted pages as a single ZIP file in one click.</p></div>
+    <div class="feature-card"><span class="feature-icon">🎛️</span><h3>Quality Control</h3><p>Adjust compression quality from 60% to 100% to balance size and sharpness.</p></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-it-works">
+  <div class="section-label">How It Works</div>
+  <h2>Three Simple Steps</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Upload Your PDF</h3><p>Drag & drop or browse to select your PDF file. Up to 200 MB supported.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Choose Settings</h3><p>Set your desired DPI, image quality, and page range for precision output.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Download JPGs</h3><p>Download individual pages or grab all pages as a convenient ZIP archive.</p></div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="faq-inner">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is this tool really free?</div><div class="faq-a">Yes, 100% free with no hidden charges, no watermarks, and no signup required.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What DPI should I choose?</div><div class="faq-a">150 DPI is ideal for screen viewing. Choose 300 DPI for print-quality output. 72 DPI is best for web thumbnails with smallest file size.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is my PDF uploaded to a server?</div><div class="faq-a">No. All conversion happens entirely in your browser using PDF.js. Your file is never sent to any server.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I convert only specific pages?</div><div class="faq-a">Yes! Use the Custom Range option and enter pages like "1-3, 5, 7" to convert only selected pages.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is the maximum PDF size?</div><div class="faq-a">You can process PDFs up to 200 MB. For larger files, we recommend splitting the PDF first.</div></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="max-width:860px;margin:0 auto;padding:0 20px 60px;">
+  <div style="background:#fff;border-radius:16px;padding:2.5rem;box-shadow:0 4px 32px rgba(0,0,0,0.06);">
+    <h2 style="font-family:'Sora',sans-serif;font-size:1.4rem;font-weight:800;color:#1a1714;margin-bottom:1.5rem;letter-spacing:-0.5px;">About PDF to JPG Conversion</h2>
+    
+        <p>Extracting pages from a PDF as JPG images is useful in many situations — sharing a single page from a multi-page document, using a PDF page as an image in a presentation, extracting charts or diagrams for editing, or creating image previews of PDF content for web use.</p>
+
+        <h3>Choosing the Right DPI</h3>
+        <p>DPI (dots per inch) determines the resolution and file size of your output images. For screen viewing and web use, 72–96 DPI produces compact files that load quickly. For standard digital sharing, 150 DPI is a good balance. For print-quality output where the image needs to look sharp when printed at full size, choose 300 DPI. Higher DPI means larger file sizes but sharper images at large print sizes.</p>
+
+        <h3>JPG Quality Setting</h3>
+        <p>The quality slider (60–100%) controls JPG compression. At 92% (the default), image quality is excellent and file sizes are manageable. At 100%, files are larger but contain maximum image data. At 60–70%, files are very compact but text may appear slightly blurry — only use low quality for thumbnails or preview images where file size matters more than sharpness.</p>
+
+        <h3>Downloading Multiple Pages</h3>
+        <p>When converting a multi-page PDF, all extracted pages can be downloaded as a single ZIP archive with one click. Files are named sequentially (page-1.jpg, page-2.jpg, etc.) so they stay organized in the correct order.</p>
+
+        <h3>Privacy</h3>
+        <p>Your PDF is processed entirely in your browser using PDF.js — the same library used by Firefox to render PDFs. No file is uploaded to any server. This means your documents remain completely private, including confidential reports, financial documents, and personal records.</p>
+
+        <h3>Frequently Asked Questions</h3>
+        <p><strong>What DPI should I choose for print?</strong> Choose 300 DPI for professional print quality. For standard digital use, 150 DPI is sufficient.</p>
+        <p><strong>Can I convert only specific pages?</strong> Yes — use the Custom Range option to specify pages like "1-3, 5, 7" and only those pages will be extracted.</p>
+        <p><strong>What is the file size limit?</strong> Up to 200MB PDFs are supported. For larger files, consider splitting the PDF first.</p>
+        
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="footer-col-title">PDF Tools</div>
+      <a href="/jpg-to-pdf.html">JPG to PDF</a>
+      <a href="/pdf-to-jpg.html">PDF to JPG</a>
+      <a href="/png-to-pdf.html">PNG to PDF</a>
+      <a href="/pdf-to-png.html">PDF to PNG</a>
+      <a href="/word-to-pdf.html">Word to PDF</a>
+      <a href="/pdf-to-word.html">PDF to Word</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <a href="/blog.html">Blog</a>
+      <a href="/about.html">About Us</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal</div>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p style="font-size:0.8rem;">© 2026 GPTPayer.online — All rights reserved.</p>
+    <p style="font-size:0.72rem;opacity:0.45;margin-top:4px;">All file processing happens in your browser. Your files stay private.</p>
+  </div>
+</footer>
+
+<!-- COOKIE BANNER -->
+<div class="cookie-banner" id="cookieBanner">
+  <p>We use cookies to improve your experience. <a href="/privacy">Learn more</a></p>
+  <div>
+    <button class="cookie-btn" onclick="acceptCookies()">Accept</button>
+    <button class="cookie-btn-decline" onclick="declineCookies()">Decline</button>
+  </div>
+</div>
+
+<script>
+  let pdfFile = null;
+  let convertedPages = [];
+  const fileInput = document.getElementById('fileInput');
+  const dropZone = document.getElementById('dropZone');
+
+  fileInput.addEventListener('change', e => { if (e.target.files[0]) loadPDF(e.target.files[0]); });
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type === 'application/pdf') loadPDF(f);
+    else alert('Please drop a valid PDF file.');
+  });
+
+  document.getElementById('pageRange').addEventListener('change', function() {
+    document.getElementById('customRangeGroup').style.display = this.value === 'custom' ? 'flex' : 'none';
+  });
+
+  function loadPDF(file) {
+    pdfFile = file;
+    dropZone.style.display = 'none';
+    document.getElementById('optionsBar').style.display = 'flex';
+    document.getElementById('results-section').style.display = 'none';
+    document.getElementById('progress-bar-wrap').style.display = 'none';
+    convertedPages = [];
+    document.getElementById('resultsGrid').innerHTML = '';
+  }
+
+  function clearAll() {
+    pdfFile = null; convertedPages = [];
+    fileInput.value = '';
+    dropZone.style.display = 'block';
+    document.getElementById('optionsBar').style.display = 'none';
+    document.getElementById('results-section').style.display = 'none';
+    document.getElementById('progress-bar-wrap').style.display = 'none';
+    document.getElementById('resultsGrid').innerHTML = '';
+  }
+
+  function parsePageRange(str, totalPages) {
+    const pages = new Set();
+    const parts = str.split(',');
+    for (let part of parts) {
+      part = part.trim();
+      if (part.includes('-')) {
+        const [a, b] = part.split('-').map(Number);
+        for (let i = a; i <= Math.min(b, totalPages); i++) if (i >= 1) pages.add(i);
+      } else {
+        const n = parseInt(part);
+        if (n >= 1 && n <= totalPages) pages.add(n);
+      }
+    }
+    return [...pages].sort((a,b) => a-b);
+  }
+
+  async function convertPDF() {
+    if (!pdfFile) return;
+    const btn = document.getElementById('btnConvert');
+    btn.disabled = true; btn.textContent = 'Converting…';
+    const progressWrap = document.getElementById('progress-bar-wrap');
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progress-label');
+    progressWrap.style.display = 'block';
+    progressFill.style.width = '0%';
+    document.getElementById('results-section').style.display = 'none';
+    convertedPages = [];
+
+    const scale = parseFloat(document.getElementById('dpiSelect').value);
+    const quality = parseInt(document.getElementById('quality').value) / 100;
+    const prefix = document.getElementById('filename').value.trim() || 'page';
+
+    try {
+      const arrayBuffer = await pdfFile.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const total = pdf.numPages;
+
+      let pagesToProcess;
+      const rangeMode = document.getElementById('pageRange').value;
+      if (rangeMode === 'custom') {
+        const custom = document.getElementById('customPages').value;
+        pagesToProcess = parsePageRange(custom, total);
+        if (pagesToProcess.length === 0) { alert('Invalid page range. Please enter valid pages.'); btn.disabled = false; btn.textContent = 'Convert to JPG →'; return; }
+      } else {
+        pagesToProcess = Array.from({length: total}, (_, i) => i + 1);
+      }
+
+      document.getElementById('resultsGrid').innerHTML = '';
+
+      for (let idx = 0; idx < pagesToProcess.length; idx++) {
+        const pageNum = pagesToProcess[idx];
+        const pct = Math.round((idx / pagesToProcess.length) * 100);
+        progressFill.style.width = pct + '%';
+        progressLabel.textContent = `Converting page ${pageNum} of ${total}…`;
+
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width; canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        convertedPages.push({ dataUrl, name: `${prefix}-${String(pageNum).padStart(3,'0')}.jpg`, page: pageNum });
+
+        await new Promise(r => setTimeout(r, 5));
+      }
+
+      progressFill.style.width = '100%';
+      progressLabel.textContent = 'Done!';
+
+      setTimeout(() => {
+        progressWrap.style.display = 'none';
+        renderResults();
+        btn.disabled = false; btn.textContent = 'Convert to JPG →';
+      }, 500);
+
+    } catch (err) {
+      console.error(err);
+      alert('Error processing PDF: ' + err.message);
+      btn.disabled = false; btn.textContent = 'Convert to JPG →';
+      progressWrap.style.display = 'none';
+    }
+  }
+
+  function renderResults() {
+    const grid = document.getElementById('resultsGrid');
+    grid.innerHTML = '';
+    convertedPages.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'result-card';
+      card.innerHTML = `
+        <img src="${item.dataUrl}" alt="Page ${item.page}" loading="lazy" />
+        <div class="result-card-footer">
+          <p>Page ${item.page}</p>
+          <button class="btn-dl-single" onclick="downloadSingle(${idx})">⬇ Download JPG</button>
+        </div>`;
+      grid.appendChild(card);
+    });
+    document.getElementById('resultsTitle').textContent = `📷 ${convertedPages.length} Page${convertedPages.length!==1?'s':''} Converted`;
+    document.getElementById('results-section').style.display = 'block';
+    document.getElementById('btnDownloadAll').onclick = downloadAll;
+  }
+
+  function downloadSingle(idx) {
+    const { dataUrl, name } = convertedPages[idx];
+    const a = document.createElement('a');
+    a.href = dataUrl; a.download = name; a.click();
+  }
+
+  async function downloadAll() {
+    const btn = document.getElementById('btnDownloadAll');
+    btn.disabled = true; btn.textContent = '⏳ Zipping…';
+    const zip = new JSZip();
+    convertedPages.forEach(item => {
+      const b64 = item.dataUrl.split(',')[1];
+      zip.file(item.name, b64, { base64: true });
+    });
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'pdf-pages.zip'; a.click();
+    URL.revokeObjectURL(url);
+    btn.disabled = false; btn.textContent = '⬇ Download All as ZIP';
+  }
+</script>
+</body>
+</html>
